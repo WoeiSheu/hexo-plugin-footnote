@@ -52,7 +52,7 @@ function renderFootnotes(text) {
     // render (HTML) footnotes reference
     text = text.replace(reFootnoteIndex,
         function(match, index){
-            var tooltip = indexMap[index].content;
+            var tooltip = (indexMap[index] || {}).content || '';
             return '<sup id="fnref:' + index + '">' +
                 '<a href="#fn:'+ index +'" rel="footnote">' +
                 '<span class="hint--top hint--error hint--medium hint--rounded hint--bounce" aria-label="'
@@ -73,7 +73,7 @@ function renderFootnotes(text) {
         html += '.</span>';
         html += '<span style="display: inline; vertical-align: top; margin-left: 10px;">';
         html += md.renderInline(footNote.content.trim());
-        html += '<a href="#fnref:' + footNote.index + '" rev="footnote"> ↩</a></span></li>';
+        html += '<a href="#fnref:' + footNote.index + '" rev="footnote">↩</a></span></li>';
     });
 
     // add footnotes at the end of the content
