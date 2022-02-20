@@ -8,9 +8,13 @@ hexo.extend.filter.register('before_post_render', function(data) {
 });
 
 // Add CDN CSS resources
-hexo.extend.filter.register('after_post_render', function(data) {
-  data.content =
-      util.htmlTag('link', {rel: 'stylesheet', type: 'text/css', href: 'https://cdn.jsdelivr.net/hint.css/2.4.1/hint.min.css'}) +
-      data.content;
-  return data;
-});
+const injectCss = '<!-- hint.css -->' +
+    '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2.7.0/hint.min.css">';
+hexo.extend.filter.register('after_render:html', function (htmlContent) {
+  // 注入 css
+  if (/<\/body>/gi.test(htmlContent)) {
+    let lastIndex = htmlContent.lastIndexOf('</body>');
+    htmlContent = htmlContent.substring(0, lastIndex) + injectCss + htmlContent.substring(lastIndex, htmlContent.length);
+  }
+  return htmlContent;
+}, 0);
